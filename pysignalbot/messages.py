@@ -45,7 +45,7 @@ class Envelope(JSONWizard):
     sourceName: str
     sourceDevice: int
     timestamp: int
-    dataMessage: DataMessage | None
+    dataMessage: DataMessage | None = None
     receiptMessage: ReceiptMessage | None = None
 
 
