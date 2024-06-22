@@ -8,7 +8,7 @@
             "name": "jsonrpc",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/examples/jsonrpc.py",
+            "program": "${workspaceFolder}/jsonrpc.py",
             "console": "internalConsole"
         }
     ]

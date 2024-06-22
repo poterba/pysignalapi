@@ -1,4 +1,5 @@
 import enum
+from typing import List
 from .engine import JsonRPC, Native
 
 
@@ -21,17 +22,7 @@ class Bot:
     def handler(self, func):
         self.message_handlers.append(func)
 
-    async def fetch(self, number):
-        if self._mode != Bot.Mode.JSON_RPC:
-            raise RuntimeError("Listening allowed only in Json RPC mode")
-        await self.engine.fetch(number, self.message_handlers)
-
-    def accounts(self):
-        result = self.engine.get("v1/accounts")
-        return result.json()
-
-    def device_add(self, phone_number):
-        return self.engine.get(f"/v1/devices/{phone_number}", json={"uri": "string"})
+    # API
 
     # retval: png binary image
     def qrcodelink(self, device_name="PYSIGNAL_DEVICE"):
@@ -52,27 +43,56 @@ class Bot:
         )
         return result.content
 
-    def account_remove(self, phone_number):
+    # accounts
+
+    def get_accounts(self):
+        result = self.engine.get("v1/accounts")
+        return result.json()
+
+    def username_remove(self, phone_number):
         return self.engine.delete(f"v1/accounts/{phone_number}/username")
 
-    def add_device(self, phone_number):
-        result = self.engine.post(
-            f"v1/devices/{phone_number}",
-            json={"uri": "string"},
-        )
-        return result.json()
+    # groups
 
     def get_groups(self, phone_number):
         result = self.engine.get(f"v1/groups/{phone_number}")
         return result.json()
 
-    def send(self, phone_number, group, msg):
+    def get_groups_members(self, phone_number, group_id):
+        result = self.engine.get(f"v1/groups/{phone_number}/{group_id}")
+        return result.json()
+
+    # messages
+
+    # NATIVE Only
+    def receive(self, phone_number):
+        if self._mode != Bot.Mode.NATIVE:
+            raise RuntimeError("Receiving allowed only in Native mode")
+        result = self.engine.get(f"v1/receive/{phone_number}")
+        return result.json()
+
+    # JSON RPC Only
+    async def fetch(self, number):
+        if self._mode != Bot.Mode.JSON_RPC:
+            raise RuntimeError("Listening allowed only in Json RPC mode")
+        await self.engine.fetch(number, self.message_handlers)
+
+    def send(
+        self,
+        phone_number,
+        msg,
+        recipients: List[str],
+        styled = False,
+    ):
         result = self.engine.post(
             "v2/send",
             json={
                 "number": phone_number,
                 "message": msg,
-                "recipients": [group],
+                "recipients": recipients,
+                "text_mode": "styled" if styled else "normal",
             },
         )
         return result.json()
+
+    # Identities
