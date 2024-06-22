@@ -24,8 +24,8 @@ class DataMessage(JSONWizard):
     message: str
     expiresInSeconds: int
     viewOnce: bool
-    groupInfo: GroupInfo | None
     mentions: list[Mention] = field(default_factory=list)
+    groupInfo: GroupInfo | None = None
 
 
 @dataclass
