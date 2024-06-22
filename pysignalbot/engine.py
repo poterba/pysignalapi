@@ -8,7 +8,7 @@ class SignalBotError(Exception):
     pass
 
 
-class Native:
+class NativeEngine:
 
     def __init__(self, base_url) -> None:
         self.base_url = base_url
@@ -46,7 +46,7 @@ class Native:
         return requests.delete(url, *args, **kwargs)
 
 
-class JsonRPC(Native):
+class JsonRPCEngine(NativeEngine):
 
     async def fetch(self, number, handlers):
         self.connection = websockets.connect(

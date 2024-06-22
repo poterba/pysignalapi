@@ -1,2 +1,3 @@
-from .bot import Bot
-from .messages import Message
+
+from .messages import *
+from .bot import JsonRPCBot, NativeBot

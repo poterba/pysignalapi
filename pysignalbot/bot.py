@@ -1,26 +1,11 @@
-import enum
 from typing import List
-from .engine import JsonRPC, Native
+from . import engine
 
 
-class Bot:
-    class Mode(enum.Enum):
-        NATIVE = 0
-        JSON_RPC = 1
+class _BaseBot:
 
-    def __init__(self, url, mode: Mode = Mode.NATIVE):
-        self._mode = mode
-        self.message_handlers = []
-
-        if self._mode == Bot.Mode.NATIVE:
-            self.engine = Native(url)
-        elif self._mode == Bot.Mode.JSON_RPC:
-            self.engine = JsonRPC(url)
-        else:
-            raise RuntimeError(f"Unknown Signal mode: {self._mode}")
-
-    def handler(self, func):
-        self.message_handlers.append(func)
+    def __init__(self, engine):
+        self.engine = engine
 
     # API
 
@@ -64,25 +49,12 @@ class Bot:
 
     # messages
 
-    # NATIVE Only
-    def receive(self, phone_number):
-        if self._mode != Bot.Mode.NATIVE:
-            raise RuntimeError("Receiving allowed only in Native mode")
-        result = self.engine.get(f"v1/receive/{phone_number}")
-        return result.json()
-
-    # JSON RPC Only
-    async def fetch(self, number):
-        if self._mode != Bot.Mode.JSON_RPC:
-            raise RuntimeError("Listening allowed only in Json RPC mode")
-        await self.engine.fetch(number, self.message_handlers)
-
     def send(
         self,
         phone_number,
         msg,
         recipients: List[str],
-        styled = False,
+        styled=False,
     ):
         result = self.engine.post(
             "v2/send",
@@ -96,3 +68,24 @@ class Bot:
         return result.json()
 
     # Identities
+
+
+class NativeBot(_BaseBot):
+    def __init__(self, url):
+        super().__init__(engine.NativeEngine(url))
+
+    def receive(self, phone_number):
+        result = self.engine.get(f"v1/receive/{phone_number}")
+        return result.json()
+
+
+class JsonRPCBot(_BaseBot):
+    def __init__(self, url):
+        super().__init__(engine.JsonRPCEngine(url))
+        self.message_handlers = []
+
+    def handler(self, func):
+        self.message_handlers.append(func)
+
+    async def receive(self, number):
+        await self.engine.fetch(number, self.message_handlers)
