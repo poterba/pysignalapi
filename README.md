@@ -4,13 +4,13 @@ Simple yet powerful library to work with [signal-cli-rest-api](https://github.co
 
 ```python
 import asyncio
-from pysignalbot import Bot
+from pysignalbot import Bot, Message
 
 bot = Bot("localhost:8080", mode=Bot.Mode.JSON_RPC)
 
 @bot.handler
-def on_message(msg):
-    logging.info(msg)
+def on_message(msg: Message):
+    print(msg)
 
 async def main():
     accounts = bot.accounts()
@@ -18,7 +18,6 @@ async def main():
         await bot.fetch(account)
 
 if __name__ in {"__main__", "__mp_main__"}:
-    logging.basicConfig(level=logging.DEBUG)
     asyncio.run(main())
 ```
 

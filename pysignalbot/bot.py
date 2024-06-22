@@ -1,6 +1,7 @@
 import enum
 from .engine import JsonRPC, Native
 
+
 class Bot:
     class Mode(enum.Enum):
         NATIVE = 0

@@ -1,8 +1,7 @@
-import abc
 import requests
 import asyncio
 import websockets
-import json
+from .messages import Message
 
 
 class SignalBotError(Exception):
@@ -55,7 +54,7 @@ class JsonRPC(Native):
         )
         async with self.connection as websocket:
             async for raw_message in websocket:
-                message = json.loads(raw_message)
+                message = Message.from_json(raw_message)
                 for h in handlers:
                     if asyncio.iscoroutinefunction(h):
                         await h(message)

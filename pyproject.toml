@@ -17,6 +17,7 @@ python = "^3.9"
 websockets = "*"
 asyncio = "*"
 requests = "*"
+dataclass-wizard = "*"
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"
