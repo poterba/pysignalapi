@@ -38,7 +38,7 @@ class ReceiptMessage:
 
 
 @dataclass
-class Envelope:
+class Envelope(JSONWizard):
     source: str
     sourceNumber: str | None
     sourceUuid: uuid.uuid4
