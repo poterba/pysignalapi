@@ -13,7 +13,7 @@ def on_message(msg: Message):
     print(msg)
 
 async def main():
-    accounts = bot.accounts()
+    accounts = bot.get_accounts()
     for account in accounts:
         await bot.fetch(account)
 
