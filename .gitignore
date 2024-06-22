@@ -1,0 +1,6 @@
+# python
+__pycache__/
+
+# user
+.env
+.venv
