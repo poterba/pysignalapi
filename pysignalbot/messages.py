@@ -29,6 +29,15 @@ class DataMessage(JSONWizard):
 
 
 @dataclass
+class ReceiptMessage:
+    when: int
+    isDelivery: bool
+    isRead: bool
+    isViewed: bool
+    timestamps: list[int] = field(default_factory=list)
+
+
+@dataclass
 class Envelope:
     source: str
     sourceNumber: str | None
@@ -36,7 +45,8 @@ class Envelope:
     sourceName: str
     sourceDevice: int
     timestamp: int
-    dataMessage: DataMessage
+    receiptMessage: ReceiptMessage | None
+    dataMessage: DataMessage | None
 
 
 @dataclass
