@@ -4,21 +4,20 @@ Simple yet powerful library to work with [signal-cli-rest-api](https://github.co
 
 ```python
 import asyncio
-from pysignalbot import Bot
+from pysignalbot import JsonRPCBot, Message
 
-bot = Bot("localhost:8080", mode=Bot.Mode.JSON_RPC)
+bot = JsonRPCBot("localhost:8080")
 
 @bot.handler
-def on_message(msg):
-    logging.info(msg)
+def on_message(msg: Message):
+    print(msg)
 
 async def main():
-    accounts = bot.accounts()
+    accounts = bot.get_accounts()
     for account in accounts:
-        await bot.fetch(account)
+        await bot.receive(account)
 
 if __name__ in {"__main__", "__mp_main__"}:
-    logging.basicConfig(level=logging.DEBUG)
     asyncio.run(main())
 ```
 

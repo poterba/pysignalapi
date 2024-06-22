@@ -1,15 +1,14 @@
-import abc
 import requests
 import asyncio
 import websockets
-import json
+from .messages import Message
 
 
 class SignalBotError(Exception):
     pass
 
 
-class Native:
+class NativeEngine:
 
     def __init__(self, base_url) -> None:
         self.base_url = base_url
@@ -47,7 +46,7 @@ class Native:
         return requests.delete(url, *args, **kwargs)
 
 
-class JsonRPC(Native):
+class JsonRPCEngine(NativeEngine):
 
     async def fetch(self, number, handlers):
         self.connection = websockets.connect(
@@ -55,7 +54,7 @@ class JsonRPC(Native):
         )
         async with self.connection as websocket:
             async for raw_message in websocket:
-                message = json.loads(raw_message)
+                message = Message.from_json(raw_message)
                 for h in handlers:
                     if asyncio.iscoroutinefunction(h):
                         await h(message)
