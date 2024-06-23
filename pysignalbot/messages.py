@@ -12,6 +12,7 @@ class Mention:
     length: int
 
 
+# https://github.com/bbernhard/signal-cli-rest-api/blob/911b6867787fc79c878064dbf7db9cfa078b1144/src/datastructs/datastructs.go#L15
 @dataclass
 class SendMention(JSONWizard):
     start: int
