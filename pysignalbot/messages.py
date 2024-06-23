@@ -13,6 +13,13 @@ class Mention:
 
 
 @dataclass
+class SendMention(JSONWizard):
+    start: int
+    length: int
+    author: str
+
+
+@dataclass
 class GroupInfo:
     groupId: str
     type: str

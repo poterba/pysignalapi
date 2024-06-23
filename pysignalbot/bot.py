@@ -1,5 +1,5 @@
 from typing import List
-from . import engine
+from . import engine, messages
 
 
 class _BaseBot:
@@ -54,6 +54,7 @@ class _BaseBot:
         phone_number,
         msg,
         recipients: List[str],
+        mentions:List[messages.SendMention]=[],
         styled=False,
     ):
         result = self.engine.post(
@@ -62,6 +63,7 @@ class _BaseBot:
                 "number": phone_number,
                 "message": msg,
                 "recipients": recipients,
+                "mentions": mentions,
                 "text_mode": "styled" if styled else "normal",
             },
         )
