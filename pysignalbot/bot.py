@@ -54,7 +54,7 @@ class _BaseBot:
         phone_number,
         msg,
         recipients: List[str],
-        mentions:List[messages.SendMention]=[],
+        mentions: List[messages.SendMention] = [],
         styled=False,
     ):
         result = self.engine.post(
