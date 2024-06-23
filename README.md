@@ -1,6 +1,10 @@
 # pysignalbot
 
-Simple yet powerful library to work with [signal-cli-rest-api](https://github.com/bbernhard/signal-cli-rest-api). It supports both sync and async modes of origin Docker container, providing supplying API.
+[![SWUbanner]][SWUdocs]
+
+Simple yet powerful library to work with [signal-cli-rest-api](https://github.com/bbernhard/signal-cli-rest-api). It supports both sync and async modes of Docker container and intends to provide closest to origin API.
+
+## Example
 
 ```python
 import asyncio

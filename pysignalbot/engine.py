@@ -56,7 +56,10 @@ class JsonRPCEngine(NativeEngine):
             async for raw_message in websocket:
                 message = Message.from_json(raw_message)
                 for h in handlers:
-                    if asyncio.iscoroutinefunction(h):
-                        await h(message)
-                    else:
-                        h(message)
+                    try:
+                        if asyncio.iscoroutinefunction(h):
+                            await h(message)
+                        else:
+                            h(message)
+                    except:
+                        pass
