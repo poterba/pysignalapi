@@ -13,6 +13,13 @@ class Mention:
 
 
 @dataclass
+class SendMention(JSONWizard):
+    start: int
+    length: int
+    author: str
+
+
+@dataclass
 class GroupInfo:
     groupId: str
     type: str
@@ -24,19 +31,29 @@ class DataMessage(JSONWizard):
     message: str
     expiresInSeconds: int
     viewOnce: bool
-    groupInfo: GroupInfo
     mentions: list[Mention] = field(default_factory=list)
+    groupInfo: GroupInfo | None = None
 
 
 @dataclass
-class Envelope:
+class ReceiptMessage:
+    when: int
+    isDelivery: bool
+    isRead: bool
+    isViewed: bool
+    timestamps: list[int] = field(default_factory=list)
+
+
+@dataclass
+class Envelope(JSONWizard):
     source: str
     sourceNumber: str | None
     sourceUuid: uuid.uuid4
     sourceName: str
     sourceDevice: int
     timestamp: int
-    dataMessage: DataMessage
+    dataMessage: DataMessage | None = None
+    receiptMessage: ReceiptMessage | None = None
 
 
 @dataclass
