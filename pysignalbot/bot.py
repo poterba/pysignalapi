@@ -3,14 +3,15 @@ from . import engine, messages
 
 
 class _BaseBot:
-
     def __init__(self, engine):
         self.engine = engine
 
     # API
 
-    # retval: png binary image
+    # Devices
+
     def qrcodelink(self, device_name="PYSIGNAL_DEVICE"):
+        """returns png binary image"""
         result = self.engine.get(f"v1/qrcodelink?device_name={device_name}")
         return result.content
 
@@ -47,7 +48,7 @@ class _BaseBot:
         result = self.engine.get(f"v1/groups/{phone_number}/{group_id}")
         return result.json()
 
-    # messages
+    # Messages
 
     def send(
         self,
@@ -69,7 +70,26 @@ class _BaseBot:
         )
         return result.json()
 
+    # Profiles
+
+    def update_profile(
+        self,
+        phone_number,
+        about,
+        base64_avatar,
+        name,
+    ):
+        result = self.engine.post(
+            f"/v1/profiles/{phone_number}",
+            json={"about": about, "base64_avatar": base64_avatar, "name": name},
+        )
+        return result.json()
+
     # Identities
+
+    def get_identities(self, phone_number):
+        result = self.engine.get(f"v1/identities/{phone_number}")
+        return result.json()
 
 
 class NativeBot(_BaseBot):

@@ -1,0 +1,18 @@
+services:
+
+  signal-cli-rest-api:
+    image: bbernhard/signal-cli-rest-api:latest
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+    environment:
+      - MODE=json-rpc
+    labels:
+      - diun.enable=true
+    volumes:
+      - signal_cli_config:/home/.local/share/signal-cli
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+volumes:
+  signal_cli_config:

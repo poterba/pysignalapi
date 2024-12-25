@@ -9,7 +9,6 @@ class SignalBotError(Exception):
 
 
 class NativeEngine:
-
     def __init__(self, base_url) -> None:
         self.base_url = base_url
 
@@ -19,10 +18,16 @@ class NativeEngine:
                 endpoint_url = f"http://{self.base_url}/{url}"
                 resp = func(self, endpoint_url, *args, **kwargs)
                 if resp.status_code not in codes:
+                    if resp.text:
+                        raise SignalBotError(resp.text)
                     json_resp = resp.json()
                     if "error" in json_resp:
                         raise SignalBotError(json_resp["error"])
-                    raise SignalBotError("Unknown Signal error while GET")
+                    if "text" in json_resp:
+                        raise SignalBotError(json_resp["text"])
+                    raise SignalBotError(
+                        f"Unknown Signal error accessing {endpoint_url}"
+                    )
                 return resp
 
             return _wrapper
@@ -47,7 +52,6 @@ class NativeEngine:
 
 
 class JsonRPCEngine(NativeEngine):
-
     async def fetch(self, number, handlers):
         self.connection = websockets.connect(
             f"ws://{self.base_url}/v1/receive/{number}", ping_interval=None
@@ -61,5 +65,5 @@ class JsonRPCEngine(NativeEngine):
                             await h(message)
                         else:
                             h(message)
-                    except:
+                    except:  # noqa: E722
                         pass
