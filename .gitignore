@@ -2,6 +2,7 @@
 __pycache__/
 /.python-version
 /.coverage
+/dist/
 
 # user
 .env
