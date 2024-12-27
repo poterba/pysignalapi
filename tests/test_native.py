@@ -1,13 +1,26 @@
 import logging
 
 
+def test_common(native_bot, caplog):
+    caplog.set_level(logging.DEBUG)
+    about = native_bot.about()
+    logging.debug(about)
+    configuration = native_bot.configuration()
+    logging.debug(configuration)
+    result = native_bot.set_configuration(logging_level="warn")
+    logging.debug(result)
+
+
 def test_getters(native_bot, caplog):
     caplog.set_level(logging.DEBUG)
+
     accounts = native_bot.get_accounts()
     for account in accounts:
         identities = native_bot.get_identities(account)
         for identity in identities:
             logging.info(identity)
+        settings = native_bot.get_account_settings(account)
+        print(settings)
         groups = native_bot.get_groups(account)
         for group in groups:
             members = native_bot.get_groups_members(account, group["id"])
