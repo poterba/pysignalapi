@@ -155,6 +155,8 @@ class _BaseAPI:
         msg: str,
         recipients: List[str],
         mentions: List[messages.SendMention] = [],
+        quote_timestamp: int = None,
+        quote_author: str = None,
         quote_message: str = None,
         styled=False,
     ):
@@ -165,6 +167,8 @@ class _BaseAPI:
                 "message": msg,
                 "recipients": recipients,
                 "mentions": mentions,
+                "quote_timestamp": quote_timestamp,
+                "quote_author": quote_author,
                 "quote_message": quote_message,
                 "text_mode": "styled" if styled else "normal",
             },
