@@ -134,6 +134,14 @@ class _BaseAPI:
         result = self.engine.delete(f"v1/groups/{number}/{group_id}")
         return result.text
 
+    def block_group(self, number, group_id: str):
+        result = self.engine.post(f"v1/groups/{number}/{group_id}/block")
+        return result.text
+
+    def join_group(self, number, group_id: str):
+        result = self.engine.post(f"v1/groups/{number}/{group_id}/join")
+        return result.text
+
     def quit_group(self, number, group_id: str):
         result = self.engine.post(f"v1/groups/{number}/{group_id}/quit")
         return result.text

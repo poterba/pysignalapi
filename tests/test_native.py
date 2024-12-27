@@ -49,6 +49,7 @@ def test_group(native_api, caplog):
         )
 
         result = native_api.quit_group(account, group_id)
+        result = native_api.block_group(account, group_id)
         result = native_api.delete_group(account, group_id)
 
 
