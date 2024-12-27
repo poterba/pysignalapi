@@ -1,22 +1,26 @@
-name: Upload Python Package
+name: Release Python Package
 
 on:
-  release:
-    types: [published]
+  push:
+    branches: [ "main" ]
+    tags: [ "v[0-9]+.[0-9]+.[0-9]+" ]
 
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   deploy:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v3
       with:
         python-version: '3.12'
+
     - name: Setup poetry
       run: |
         pip install poetry
@@ -24,8 +28,11 @@ jobs:
         poetry config virtualenvs.in-project true
         poetry install --without=test,dev
         poetry build
+
     - name: Publish package
       uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
       with:
         user: __token__
         password: ${{ secrets.PYPI_API_TOKEN }}
+
+    - uses: ncipollo/release-action@v1
