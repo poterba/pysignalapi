@@ -1,6 +1,10 @@
 import asyncio
+import logging
 from typing import List
 from . import engine, messages
+
+
+_LOG = logging.getLogger("pysignalbot.bot")
 
 
 class _BaseBot:
@@ -143,7 +147,8 @@ class _BaseBot:
     def send(
         self,
         number,
-        msg,
+        *,
+        msg: str,
         recipients: List[str],
         mentions: List[messages.SendMention] = [],
         styled=False,
@@ -221,12 +226,14 @@ class JsonRPCBot(_BaseBot):
         self.message_handlers.append(func)
 
     async def receive(self, number):
-        async with self.engine.fetch(number) as message:
+        async for message in self.engine.fetch(number):
             for handler in self.message_handlers:
                 try:
                     if asyncio.iscoroutinefunction(handler):
-                        await handler(message)
+                        await handler(number, message)
                     else:
-                        handler(message)
+                        handler(number, message)
+                except Exception as e:  # noqa: E722
+                    _LOG.exception(e)
                 except:  # noqa: E722
                     pass

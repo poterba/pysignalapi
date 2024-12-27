@@ -51,7 +51,7 @@ class NativeEngine:
 
 
 class JsonRPCEngine(NativeEngine):
-    async def fetch(self, number, handlers):
+    async def fetch(self, number):
         self.connection = websockets.connect(
             f"ws://{self.base_url}/v1/receive/{number}", ping_interval=None
         )

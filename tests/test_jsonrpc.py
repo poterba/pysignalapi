@@ -1,4 +1,6 @@
+import asyncio
 import logging
+import threading
 
 import pytest
 from pysignalbot.messages import Message
@@ -8,21 +10,28 @@ from pysignalbot.messages import Message
 async def test_getters(jsonrpc_bot, caplog):
     caplog.set_level(logging.DEBUG)
 
+    events = {}
+
     @jsonrpc_bot.handler
-    def on_message(msg: Message):
-        logging.info(msg)
+    def on_message(number, msg: Message):
+        logging.info(number, msg)
 
     accounts = jsonrpc_bot.get_accounts()
     for account in accounts:
-        identities = jsonrpc_bot.get_identities(account)
-        for identity in identities:
-            logging.info(identity)
-        groups = jsonrpc_bot.get_groups(account)
-        for group in groups:
-            members = jsonrpc_bot.get_groups_members(account, group["id"])
-            for member in members:
-                logging.info(member)
+        result = jsonrpc_bot.create_group(
+            account,
+            name="TEST_GROUP",
+            description="TEST GENERATED",
+            members=[],
+        )
+        group_id = result["id"]
+        events[group_id] = threading.Event()
 
-    # accounts = jsonrpc_bot.get_accounts()
-    # for account in accounts:
-    #     await jsonrpc_bot.receive(account)
+        jsonrpc_bot.send(account, msg="test", recipients=[group_id])
+        await jsonrpc_bot.receive(account)
+        result = jsonrpc_bot.quit_group(account, group_id)
+        result = jsonrpc_bot.delete_group(account, group_id)
+
+    for group_id in events:
+        event: threading.Event = events[group_id]
+        event.wait()
