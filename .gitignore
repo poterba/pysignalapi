@@ -1,6 +1,11 @@
 # python
 __pycache__/
+/.python-version
+/.coverage
 
 # user
 .env
 .venv
+
+# ide
+.vscode
