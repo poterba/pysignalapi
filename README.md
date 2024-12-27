@@ -1,6 +1,6 @@
 [![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner-direct-single.svg)](https://stand-with-ukraine.pp.ua)
 
-# pysignalbot
+# pysignalapi
 
 Simple yet powerful library to work with [signal-cli-rest-api](https://github.com/bbernhard/signal-cli-rest-api). It supports both sync and async modes of Docker container and intends to provide closest to origin API.
 
@@ -8,18 +8,18 @@ Simple yet powerful library to work with [signal-cli-rest-api](https://github.co
 
 ```python
 import asyncio
-from pysignalbot import JsonRPCBot, Message
+from pysignalapi import JsonRPCAPI, Message
 
-bot = JsonRPCBot("localhost:8080")
+api = JsonRPCAPI("localhost:8080")
 
-@bot.handler
+@api.handler
 def on_message(msg: Message):
     print(msg)
 
 async def main():
-    accounts = bot.get_accounts()
+    accounts = api.get_accounts()
     for account in accounts:
-        await bot.receive(account)
+        await api.receive(account)
 
 if __name__ in {"__main__", "__mp_main__"}:
     asyncio.run(main())

@@ -3,7 +3,7 @@ import websockets
 from .messages import Message
 
 
-class SignalBotError(Exception):
+class SignalAPIError(Exception):
     pass
 
 
@@ -18,13 +18,13 @@ class NativeEngine:
                 resp = func(self, endpoint_url, *args, **kwargs)
                 if resp.status_code not in codes:
                     if resp.text:
-                        raise SignalBotError(resp.text)
+                        raise SignalAPIError(resp.text)
                     json_resp = resp.json()
                     if "error" in json_resp:
-                        raise SignalBotError(json_resp["error"])
+                        raise SignalAPIError(json_resp["error"])
                     if "text" in json_resp:
-                        raise SignalBotError(json_resp["text"])
-                    raise SignalBotError(
+                        raise SignalAPIError(json_resp["text"])
+                    raise SignalAPIError(
                         f"Unknown Signal error accessing {endpoint_url}"
                     )
                 return resp
