@@ -3,6 +3,7 @@ __pycache__/
 /.python-version
 /.coverage
 /dist/
+/build/
 
 # user
 .env
