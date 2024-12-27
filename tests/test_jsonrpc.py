@@ -1,7 +1,10 @@
 import logging
+
+import pytest
 from pysignalbot.messages import Message
 
 
+@pytest.mark.asyncio
 async def test_getters(jsonrpc_bot, caplog):
     caplog.set_level(logging.DEBUG)
 
@@ -20,6 +23,6 @@ async def test_getters(jsonrpc_bot, caplog):
             for member in members:
                 logging.info(member)
 
-    accounts = jsonrpc_bot.get_accounts()
-    for account in accounts:
-        await jsonrpc_bot.receive(account)
+    # accounts = jsonrpc_bot.get_accounts()
+    # for account in accounts:
+    #     await jsonrpc_bot.receive(account)

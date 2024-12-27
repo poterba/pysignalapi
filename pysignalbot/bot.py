@@ -1,3 +1,4 @@
+import asyncio
 from typing import List
 from . import engine, messages
 
@@ -44,6 +45,63 @@ class _BaseBot:
         result = self.engine.get(f"v1/groups/{phone_number}")
         return result.json()
 
+    def create_group(
+        self,
+        phone_number,
+        *,
+        name: str,
+        description: str,
+        members: list[str],
+    ):
+        result = self.engine.post(
+            f"v1/groups/{phone_number}",
+            json={
+                "description": description,
+                "expiration_time": 0,
+                "group_link": "disabled",
+                "members": members,
+                "name": name,
+                "permissions": {
+                    "add_members": "only-admins",
+                    "edit_group": "only-admins",
+                },
+            },
+        )
+        return result.json()
+
+    def get_group(self, phone_number, group_id: str):
+        result = self.engine.get(f"v1/groups/{phone_number}/{group_id}")
+        return result.json()
+
+    def update_group(
+        self,
+        phone_number,
+        group_id: str,
+        *,
+        base64_avatar: str,
+        description: str,
+        name: str,
+        expiration_time: int = 0,
+    ):
+        result = self.engine.put(
+            f"v1/groups/{phone_number}/{group_id}",
+            json={
+                "base64_avatar": base64_avatar,
+                "description": description,
+                "expiration_time": expiration_time,
+                "name": name,
+            },
+        )
+        return result.text
+
+    def delete_group(self, phone_number, group_id: str):
+        result = self.engine.delete(f"v1/groups/{phone_number}/{group_id}")
+        return result.text
+
+    def quit_group(self, phone_number, group_id: str):
+        result = self.engine.post(f"v1/groups/{phone_number}/{group_id}/quit")
+        return result.text
+
     def get_groups_members(self, phone_number, group_id):
         result = self.engine.get(f"v1/groups/{phone_number}/{group_id}")
         return result.json()
@@ -79,17 +137,38 @@ class _BaseBot:
         base64_avatar,
         name,
     ):
-        result = self.engine.post(
+        result = self.engine.put(
             f"/v1/profiles/{phone_number}",
             json={"about": about, "base64_avatar": base64_avatar, "name": name},
         )
-        return result.json()
+        return result.text
 
     # Identities
 
     def get_identities(self, phone_number):
         result = self.engine.get(f"v1/identities/{phone_number}")
         return result.json()
+
+    def trust_identity(
+        self,
+        phone_number,
+        *,
+        numberToTrust: str,
+        trust_all_or_safety_number: bool | str,
+    ):
+        data = {}
+        if isinstance(trust_all_or_safety_number, bool):
+            data["trust_all_known_keys"] = trust_all_or_safety_number
+        elif isinstance(trust_all_or_safety_number, str):
+            data["verified_safety_number"] = trust_all_or_safety_number
+        else:
+            raise RuntimeError("Set `trust_all_or_safety_number` as bool or string!")
+
+        result = self.engine.put(
+            f"/v1/identities/{phone_number}/trust/{numberToTrust}",
+            json=data,
+        )
+        return result.text
 
 
 class NativeBot(_BaseBot):
@@ -110,4 +189,12 @@ class JsonRPCBot(_BaseBot):
         self.message_handlers.append(func)
 
     async def receive(self, number):
-        await self.engine.fetch(number, self.message_handlers)
+        async with self.engine.fetch(number) as message:
+            for handler in self.message_handlers:
+                try:
+                    if asyncio.iscoroutinefunction(handler):
+                        await handler(message)
+                    else:
+                        handler(message)
+                except:  # noqa: E722
+                    pass

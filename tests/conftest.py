@@ -8,7 +8,7 @@ _SIGNAL_BOT_ENDPOINT = os.getenv("SIGNAL_BOT_ENDPOINT", "localhost:8080")
 _SIGNAL_BOT_CREATE = os.getenv("SIGNAL_BOT_CREATE", True)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def native_bot():
     bot = NativeBot(_SIGNAL_BOT_ENDPOINT)
     accounts = bot.get_accounts()
@@ -19,7 +19,8 @@ def native_bot():
         raise RuntimeError("No linked accounts")
     return bot
 
-@pytest.fixture(scope="module")
+
+@pytest.fixture(scope="session")
 def jsonrpc_bot():
     bot = JsonRPCBot(_SIGNAL_BOT_ENDPOINT)
     accounts = bot.get_accounts()

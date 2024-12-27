@@ -1,5 +1,4 @@
 import requests
-import asyncio
 import websockets
 from .messages import Message
 
@@ -12,7 +11,7 @@ class NativeEngine:
     def __init__(self, base_url) -> None:
         self.base_url = base_url
 
-    def _requests_wrap(codes=[200]):
+    def _requests_wrap(codes=[200, 201, 204]):
         def decorator(func):
             def _wrapper(self, url, *args, **kwargs):
                 endpoint_url = f"http://{self.base_url}/{url}"
@@ -38,7 +37,7 @@ class NativeEngine:
     def get(self, url, *args, **kwargs):
         return requests.get(url, *args, **kwargs)
 
-    @_requests_wrap(codes=[200, 201])
+    @_requests_wrap()
     def post(self, url, *args, **kwargs):
         return requests.post(url, *args, **kwargs)
 
@@ -58,12 +57,4 @@ class JsonRPCEngine(NativeEngine):
         )
         async with self.connection as websocket:
             async for raw_message in websocket:
-                message = Message.from_json(raw_message)
-                for h in handlers:
-                    try:
-                        if asyncio.iscoroutinefunction(h):
-                            await h(message)
-                        else:
-                            h(message)
-                    except:  # noqa: E722
-                        pass
+                yield Message.from_json(raw_message)
