@@ -138,10 +138,6 @@ class _BaseAPI:
         result = self.engine.post(f"v1/groups/{number}/{group_id}/quit")
         return result.text
 
-    def get_groups_members(self, number, group_id):
-        result = self.engine.get(f"v1/groups/{number}/{group_id}")
-        return result.json()
-
     # Messages
 
     def send(
