@@ -26,7 +26,7 @@ def test_group(native_bot, caplog):
             members=[],
         )
         group_id = result["id"]
-        info = native_bot.get_group(account, group_id)
+        native_bot.get_group(account, group_id)
         native_bot.update_group(
             account,
             group_id,
