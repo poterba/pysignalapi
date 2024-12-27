@@ -4,10 +4,10 @@ from typing import List
 from . import engine, messages
 
 
-_LOG = logging.getLogger("pysignalbot.bot")
+_LOG = logging.getLogger("pysignalapi.api")
 
 
-class _BaseBot:
+class _BaseAPI:
     def __init__(self, engine):
         self.engine = engine
 
@@ -208,7 +208,7 @@ class _BaseBot:
         return result.text
 
 
-class NativeBot(_BaseBot):
+class NativeAPI(_BaseAPI):
     def __init__(self, url):
         super().__init__(engine.NativeEngine(url))
 
@@ -217,7 +217,7 @@ class NativeBot(_BaseBot):
         return result.json()
 
 
-class JsonRPCBot(_BaseBot):
+class JsonRPCAPI(_BaseAPI):
     def __init__(self, url):
         super().__init__(engine.JsonRPCEngine(url))
         self.message_handlers = []

@@ -1,14 +1,14 @@
 import os
-from pysignalbot import JsonRPCBot, Message
+from pysignalapi import JsonRPCAPI, Message
 import asyncio
 import logging
 
-_SIGNAL_BOT_ENDPOINT = os.environ.get("SIGNAL_BOT_ENDPOINT", "localhost:8080")
+_SIGNAL_API_ENDPOINT = os.environ.get("SIGNAL_API_ENDPOINT", "localhost:8080")
 
-signal_bot = JsonRPCBot(_SIGNAL_BOT_ENDPOINT)
+api = JsonRPCAPI(_SIGNAL_API_ENDPOINT)
 
 
-@signal_bot.handler
+@api.handler
 def on_message(number, msg: Message):
     data = msg.envelope.dataMessage
     if data:
@@ -18,10 +18,10 @@ def on_message(number, msg: Message):
 
 
 async def main():
-    accounts = signal_bot.get_accounts()
+    accounts = api.get_accounts()
     for account in accounts:
-        await signal_bot.receive(account)
-        # task = asyncio.create_task(signal_bot.receive(account))
+        await api.receive(account)
+        # task = asyncio.create_task(api.receive(account))
         # asyncio.ensure_future(task)
 
 
