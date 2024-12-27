@@ -155,6 +155,7 @@ class _BaseAPI:
         msg: str,
         recipients: List[str],
         mentions: List[messages.SendMention] = [],
+        quote_message: str = None,
         styled=False,
     ):
         result = self.engine.post(
@@ -164,6 +165,7 @@ class _BaseAPI:
                 "message": msg,
                 "recipients": recipients,
                 "mentions": mentions,
+                "quote_message": quote_message,
                 "text_mode": "styled" if styled else "normal",
             },
         )
