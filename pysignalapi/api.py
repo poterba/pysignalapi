@@ -41,7 +41,7 @@ class _BaseAPI:
         """Set account specific settings."""
         result = self.engine.post(
             f"v1/configuration/{number}/settings",
-            json={"truts_mode": trust_mode},
+            json={"trust_mode": trust_mode},
         )
         return result.content
 
@@ -158,6 +158,7 @@ class _BaseAPI:
         quote_timestamp: int = None,
         quote_author: str = None,
         quote_message: str = None,
+        quote_mentions: List[messages.SendMention] = [],
         styled=False,
     ):
         result = self.engine.post(
@@ -166,10 +167,11 @@ class _BaseAPI:
                 "number": number,
                 "message": msg,
                 "recipients": recipients,
-                "mentions": mentions,
+                "mentions": [x.to_dict() for x in mentions],
                 "quote_timestamp": quote_timestamp,
                 "quote_author": quote_author,
                 "quote_message": quote_message,
+                "quote_mentions": [x.to_dict() for x in quote_mentions],
                 "text_mode": "styled" if styled else "normal",
             },
         )

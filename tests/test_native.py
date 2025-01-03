@@ -20,12 +20,9 @@ def test_getters(native_api, caplog):
         for identity in identities:
             logging.info(identity)
         settings = native_api.get_account_settings(account)
-        print(settings)
+        logging.info(settings)
         groups = native_api.get_groups(account)
-        for group in groups:
-            members = native_api.get_groups_members(account, group["id"])
-            for member in members:
-                logging.info(member)
+        logging.info(groups)
 
 
 def test_group(native_api, caplog):
@@ -65,7 +62,7 @@ def test_group(native_api, caplog):
 #                 numberToTrust=identity["number"],
 #                 trust_all_or_safety_number=True,
 #             )
-#             print(result)
+#             logging.info(result)
 
 
 def test_profile(native_api, caplog):
@@ -78,4 +75,4 @@ def test_profile(native_api, caplog):
             base64_avatar=None,
             name="TEST ACCOUNT",
         )
-        print(result)
+        logging.info(result)
