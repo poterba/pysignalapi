@@ -21,6 +21,14 @@ class SendMention(JSONWizard):
 
 
 @dataclass
+class QuoteMessage:
+    timestamp: int = None
+    author: str = None
+    message: str = None
+    mentions: list[SendMention] = field(default_factory=list)
+
+
+@dataclass
 class GroupInfo:
     groupId: str
     type: str

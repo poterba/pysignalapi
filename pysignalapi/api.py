@@ -1,4 +1,5 @@
 import asyncio
+import base64
 import logging
 from typing import List
 from . import engine, messages
@@ -155,26 +156,29 @@ class _BaseAPI:
         msg: str,
         recipients: List[str],
         mentions: List[messages.SendMention] = [],
-        quote_timestamp: int = None,
-        quote_author: str = None,
-        quote_message: str = None,
-        quote_mentions: List[messages.SendMention] = [],
+        quote: messages.QuoteMessage | None = None,
+        attachments: list[bytes | str] = [],
         styled=False,
     ):
-        result = self.engine.post(
-            "v2/send",
-            json={
-                "number": number,
-                "message": msg,
-                "recipients": recipients,
-                "mentions": [x.to_dict() for x in mentions],
-                "quote_timestamp": quote_timestamp,
-                "quote_author": quote_author,
-                "quote_message": quote_message,
-                "quote_mentions": [x.to_dict() for x in quote_mentions],
-                "text_mode": "styled" if styled else "normal",
-            },
-        )
+        json = {
+            "number": number,
+            "message": msg,
+            "recipients": recipients,
+            "mentions": [x.to_dict() for x in mentions],
+            "text_mode": "styled" if styled else "normal",
+        }
+        if quote:
+            json |= {
+                "quote_timestamp": quote.timestamp,
+                "quote_author": quote.author,
+                "quote_message": quote.message,
+                "quote_mentions": [x.to_dict() for x in quote.mentions],
+            }
+        json["base64_attachments"] = [
+            x if isinstance(x, str) else base64.b64encode(x) for x in attachments
+        ]
+
+        result = self.engine.post("v2/send", json=json)
         return result.json()
 
     # Profiles
