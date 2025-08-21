@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from typing import Optional
 from dataclass_wizard import JSONWizard
 import uuid
 
@@ -41,7 +42,7 @@ class DataMessage(JSONWizard):
     expiresInSeconds: int
     viewOnce: bool
     mentions: list[Mention] = field(default_factory=list)
-    groupInfo: GroupInfo | None = None
+    groupInfo: Optional[GroupInfo] = None
 
 
 @dataclass
@@ -56,13 +57,13 @@ class ReceiptMessage:
 @dataclass
 class Envelope(JSONWizard):
     source: str
-    sourceNumber: str | None
+    sourceNumber: Optional[str]
     sourceUuid: uuid.uuid4
     sourceName: str
     sourceDevice: int
     timestamp: int
-    dataMessage: DataMessage | None = None
-    receiptMessage: ReceiptMessage | None = None
+    dataMessage: Optional[DataMessage] = None
+    receiptMessage: Optional[ReceiptMessage] = None
 
 
 @dataclass

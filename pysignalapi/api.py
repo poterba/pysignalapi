@@ -1,7 +1,7 @@
 import asyncio
 import base64
 import logging
-from typing import List
+from typing import List, Optional, Union
 from . import engine, messages
 
 
@@ -156,8 +156,8 @@ class _BaseAPI:
         msg: str,
         recipients: List[str],
         mentions: List[messages.SendMention] = [],
-        quote: messages.QuoteMessage | None = None,
-        attachments: list[bytes | str] = [],
+        quote: Optional[messages.QuoteMessage] = None,
+        attachments: list[Union[bytes, str]] = [],
         styled=False,
     ):
         json = {
@@ -207,7 +207,7 @@ class _BaseAPI:
         number,
         *,
         numberToTrust: str,
-        trust_all_or_safety_number: bool | str,
+        trust_all_or_safety_number: Union[bool, str],
     ):
         data = {}
         if isinstance(trust_all_or_safety_number, bool):
