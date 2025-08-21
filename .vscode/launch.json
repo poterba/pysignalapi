@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "example: jsonrpc",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/examples/jsonrpc.py",
+            "console": "internalConsole",
+            "internalConsoleOptions": "openOnSessionStart",
+            "justMyCode": false
+        }
+    ]
+}

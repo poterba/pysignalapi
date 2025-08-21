@@ -8,6 +8,3 @@ __pycache__/
 # user
 .env
 .venv
-
-# ide
-.vscode
