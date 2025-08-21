@@ -1,29 +1,29 @@
+[project]
+name = "pysignalapi"
+description = "Python client for `signal-cli-rest-api`"
+authors = [{ name = "poterba" }]
+readme = "README.md"
+license-files = ["LICENSE"]
+requires-python = ">=3.9"
+dependencies = [
+    "websockets (>=15.0.1,<16.0.0)",
+    "asyncio (>=4.0.0,<5.0.0)",
+    "requests (>=2.32.5,<3.0.0)",
+    "dataclass-wizard (>=0.35.1,<0.36.0)",
+]
+dynamic = ["version"]
 
 [tool.poetry]
-authors = ["poterba"]
 version = "0.0.0"
-description = "Python client for `signal-cli-rest-api`"
-license = "MIT"
-maintainers = ["poterba"]
-name = "pysignalapi"
-readme = "README.md"
-repository = "https://github.com/poterba/pysignalapi"
-
-[tool.poetry.dependencies]
-python = "^3.9,<3.13"
-websockets = "*"
-asyncio = "*"
-requests = "*"
-dataclass-wizard = "*"
 
 [tool.poetry.group.dev.dependencies]
-ruff = "^0.8.4"
+ruff = "^0.12.9"
 
 [tool.poetry.group.test.dependencies]
-pytest = "^8.3.4"
-pytest-cov = "^6.0.0"
-pytest-asyncio = "^0.23.8"
-pillow = "^11.0.0"
+pytest = "^8.4.1"
+pytest-cov = "^6.2.1"
+pytest-asyncio = "^1.1.0"
+pillow = "^11.3.0"
 
 [tool.poetry.requires-plugins]
 poetry-dynamic-versioning = { version = ">=1.0.0,<2.0.0", extras = ["plugin"] }

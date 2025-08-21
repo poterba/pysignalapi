@@ -23,7 +23,6 @@ jobs:
     - name: Setup poetry
       run: |
         pip install poetry
-        poetry self add 'poetry-dynamic-versioning[plugin]'
         poetry config virtualenvs.in-project true
         poetry install --without=test,dev
         poetry build
